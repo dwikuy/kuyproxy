@@ -1,0 +1,41 @@
+# ════════════════════════════════════════════
+#   frpc.ini — FRP Client Config (HP/Termux)
+#   Lokasi: ~/kuyproxy/frpc.ini
+#
+#   FILE INI AUTO-GENERATE oleh frpc_gen.sh
+#   Jangan edit manual — edit config.cfg saja
+#   lalu jalankan: bash frpc_gen.sh
+# ════════════════════════════════════════════
+
+[common]
+server_addr = GANTI_IP_VPS        # ← dari config.cfg: FRP_SERVER_HOST
+server_port = 7000                # ← dari config.cfg: FRP_SERVER_PORT
+token       = ganti_token_kamu    # ← dari config.cfg: FRP_TOKEN
+log_level   = info
+log_file    = /data/data/com.termux/files/home/kuyproxy/logs/frpc.log
+
+# ── Tunnel 1: SOCKS5 ──────────────────────
+# Tunnel port SOCKS5 lokal HP ke VPS
+# Client di luar connect ke VPS_IP:1080
+[socks5_kuyproxy01]
+type        = tcp
+local_ip    = 127.0.0.1
+local_port  = 1080           # ← port SOCKS5 server di HP
+remote_port = 1080           # ← port yang dibuka di VPS (buka di firewall!)
+
+# ── Tunnel 2: HTTP Proxy ──────────────────
+# Tunnel port HTTP proxy lokal HP ke VPS
+[http_kuyproxy01]
+type        = tcp
+local_ip    = 127.0.0.1
+local_port  = 8118           # ← port HTTP proxy server di HP
+remote_port = 8118           # ← port yang dibuka di VPS (buka di firewall!)
+
+# ── Tunnel 3: API Server ──────────────────
+# Tunnel API server HP ke VPS
+# Web dashboard VPS call ini untuk kontrol HP
+[api_kuyproxy01]
+type        = tcp
+local_ip    = 127.0.0.1
+local_port  = 8080           # ← port API server di HP
+remote_port = 8080           # ← port yang dibuka di VPS (buka di firewall!)
