@@ -52,12 +52,11 @@ cmd_start() {
         return 1
     fi
 
-    # Setup IPv6 pool
+    # Setup IPv6 pool (tidak fatal jika gagal — fallback ke Single IP mode)
     log "📡 Setting up IPv6 pool..."
     bash "$KUYDIR/ip_manager.sh" setup
     if [ $? -ne 0 ]; then
-        log "❌ IP pool setup failed"
-        return 1
+        log "⚠️  IPv6 pool not available — continuing in Single IP mode"
     fi
 
     # Start SOCKS5 + HTTP proxy server
