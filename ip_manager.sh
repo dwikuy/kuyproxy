@@ -66,16 +66,20 @@ setup_pool() {
 
     local iface; iface=$(detect_interface)
     if [ -z "$iface" ]; then
-        log "❌ No IPv6 interface found"
-        return 1
+        log "⚠️  No IPv6 interface found — running in Single IP mode"
+        log "   (Proxy will work with operator's IP, no sticky IP per user)"
+        > "$IP_LIST"
+        return 0
     fi
     log "Using interface: $iface"
     echo "$iface" > "$IFACE_FILE"
 
     local prefix; prefix=$(detect_prefix "$iface")
     if [ -z "$prefix" ]; then
-        log "❌ Cannot detect IPv6 prefix"
-        return 1
+        log "⚠️  Cannot detect IPv6 prefix — running in Single IP mode"
+        log "   (This is normal if your carrier doesn't provide IPv6)"
+        > "$IP_LIST"
+        return 0
     fi
     log "Prefix: $prefix"
 
@@ -96,6 +100,11 @@ setup_pool() {
             fi
         fi
     done
+
+    if [ "$added" -eq 0 ]; then
+        log "⚠️  Could not add IPv6 IPs (no root?) — Single IP mode"
+        return 0
+    fi
 
     log "✅ Pool ready: $added IPs added to $iface"
     return 0
